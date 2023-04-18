@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>train</title>
+</head>
+<body>
+    <script>
+        // This Ticket class will represent a ticket with starting station as 'from' and ending station as 'to'.
+class Ticket {
+    constructor(from, to) {
+      this.from = from;
+      this.to = to;
+    }
+  }
+
+ //  The Graph class represents the graph of railway tickets,
+ //  where each station is a node in the graph and each ticket, represents a directed edge between two stations
+  class Graph {
+    constructor() {
+      this.adjList = new Map();
+    }
+  
+  //Here we will check if the starting station for a ticket exists in the graph or not and if it not exists,
+  //we will set the starting station in the graph and will push the ending station into the graph.
+    addTicket(ticket) {
+      if (!this.adjList.has(ticket.from)) {
+        this.adjList.set(ticket.from, []);
+      }
+      this.adjList.get(ticket.from).push(ticket.to);
+    }
+  
+    //Below declared 'dfs' method implements the depth first search algorithm to traverse the graph
+    // and find the path from the starting station using recursion.
+    dfs(start, visited, path) {
+      visited.add(start);
+      path.push(start);
+  
+      if (this.adjList.has(start)) {
+        const neighbors = this.adjList.get(start);
+        for (const neighbor of neighbors) {
+          if (!visited.has(neighbor)) {
+            this.dfs(neighbor, visited, path);
+          }
+        }
+      }
+    }
+  
+    //The findPath method initializes the visited set and path array
+    //and then calls the dfs method to find the path from the starting station.
+    findPath(start) {
+      const visited = new Set();
+      const path = [];
+      this.dfs(start, visited, path);
+      return path;
+    }
+  }
+  
+//Here we have created the tickets as given us in the question.
+  const ticket1 = new Ticket("Paris", "Skopje");
+  const ticket2 = new Ticket("Zurich", "Amsterdam");
+  const ticket3 = new Ticket("Prague", "Zurich");
+  const ticket4 = new Ticket("Barcelona", "Berlin");
+  const ticket5 = new Ticket("Kiev", "Prague");
+  const ticket6 = new Ticket("Skopje", "Paris");
+  const ticket7 = new Ticket("Amsterdam", "Barcelona");
+  const ticket8 = new Ticket("Berlin", "Kiev");
+  const ticket9 = new Ticket("Berlin", "Amsterdam");
+  
+  //Here the graph is created according to the given starting point and Available train tickets.
+  const graph = new Graph();
+  graph.addTicket(ticket1);
+  graph.addTicket(ticket2);
+  graph.addTicket(ticket3);
+  graph.addTicket(ticket4);
+  graph.addTicket(ticket5);
+  graph.addTicket(ticket6);
+  graph.addTicket(ticket7);
+  graph.addTicket(ticket8);
+  graph.addTicket(ticket9);
+
+  //This Section will find out the possible path for available tickets.
+  const startStation = "Kiev";
+  const path = graph.findPath(startStation);
+  
+  console.log("Path from " + startStation + ": " + path.join(" -> "));
+    </script>
+</body>
+</html>
